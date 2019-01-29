@@ -185,8 +185,8 @@ namespace The_Age_of_Heroes_Game
                 // Move to the next frame
                 currentFrame++;
 
-                // If the currentFrame is equal to frameCount reset currentFrame to zero
-                if (currentFrame == frameCount)
+                // If the currentFrame is equal to frameCount reset currentFrame to zero ff
+                if (currentFrame == frameCount) 
                 {
                     currentFrame = 0;
                 }
