@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System;
 using The_Age_of_Heroes_Game.Content.Sprites;
 using The_Age_of_Heroes_Game.Content.Models;
+using A1r.SimpleTextUI;
+using System.Timers;
 
 namespace The_Age_of_Heroes_Game
 {
@@ -29,6 +31,12 @@ namespace The_Age_of_Heroes_Game
         private readonly Texture2D keyTexture;
         List<Squared.Tiled.Object> Inventory;
         int coin_collected = 0;
+        SimpleTextUI menu;
+        SimpleTextUI options;
+        SimpleTextUI current;
+        SpriteFont big;
+        SpriteFont small;
+        Timer keytimer;
         // Get the width of the player ship
         // The time since we last updated the frame
         int elapsedTime;
@@ -79,6 +87,8 @@ namespace The_Age_of_Heroes_Game
             elapsedTime = 0;
             currentFrame = 0;
             base.Initialize();
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
         }
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -119,10 +129,27 @@ namespace The_Age_of_Heroes_Game
                 },
             };
 
+            big = Content.Load<SpriteFont>("Big");
+            small = Content.Load<SpriteFont>("Small");
+            // Set menus and screens
+            menu = new SimpleTextUI(this, big, new[] { "Play", "Options", "Credits", "Exit" })
+            {
+                TextColor = Color.Purple,
+                SelectedElement = new TextElement(">", Color.Green),
+                Align = Alignment.Left
+            };
+
+            options = new SimpleTextUI(this, big, new TextElement[]
+            {
+                new SelectElement("Video", new[]{"FullScreen","Windowed"}),
+                new NumericElement("Music",1,3,0f,10f,1f),
+                new TextElement("Back")
+            });
+            current = menu;
+            keytimer = new Timer();
 
             coinTexture = Content.Load<Texture2D>("coinTexture");
             blankTexture = Content.Load<Texture2D>("Transparent");
-
             int coinCount = Convert.ToInt32(map.ObjectGroups["Objects"].Properties["Coin_Count"]);
             for (int i = 1; i <= coinCount; i++)
             {
@@ -153,6 +180,31 @@ namespace The_Age_of_Heroes_Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState keys = Keyboard.GetState();
+            bool change = true;
+
+            if (!keytimer.Enabled)
+            {
+                if (keys.IsKeyDown(Keys.Up))
+                {
+                    current.Move(Direction.Up);
+                }
+
+                else if (keys.IsKeyDown(Keys.Down))
+                {
+                    current.Move(Direction.Down);
+                }
+                else
+                    change = false;
+
+                if (change)
+                {
+                    keytimer = new Timer();
+                    keytimer.Interval = 200;
+                    keytimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                    keytimer.Enabled = true;
+                }
+            }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
             
@@ -185,7 +237,7 @@ namespace The_Age_of_Heroes_Game
                 // Move to the next frame
                 currentFrame++;
 
-                // If the currentFrame is equal to frameCount reset currentFrame to zero ff
+                // If the currentFrame is equal to frameCount reset currentFrame to zero 
                 if (currentFrame == frameCount) 
                 {
                     currentFrame = 0;
@@ -203,7 +255,10 @@ namespace The_Age_of_Heroes_Game
             viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X - (graphics.PreferredBackBufferWidth / 2), map.ObjectGroups["Objects"].Objects["Player"].Y - (graphics.PreferredBackBufferHeight / 2));
             base.Update(gameTime);
         }
-
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            keytimer.Enabled = false;
+        }
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -211,6 +266,7 @@ namespace The_Age_of_Heroes_Game
         /// 
         protected override void Draw(GameTime gameTime)
         {
+            current.Draw(gameTime);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition);
