@@ -63,6 +63,15 @@ namespace The_Age_of_Heroes_Game
         public int FrameHeight;
         private int scale;
 
+        public enum Menu
+        {
+            Main,
+            Play,
+            Options,
+            Gameover,
+            Inventory
+        }
+        Menu currentScreen = Menu.Main;
         public object Position { get; private set; }
 
         public Game1()
@@ -147,6 +156,7 @@ namespace The_Age_of_Heroes_Game
             });
             current = menu;
             keytimer = new Timer();
+
 
             coinTexture = Content.Load<Texture2D>("coinTexture");
             blankTexture = Content.Load<Texture2D>("Transparent");
@@ -266,8 +276,13 @@ namespace The_Age_of_Heroes_Game
         /// 
         protected override void Draw(GameTime gameTime)
         {
-            current.Draw(gameTime);
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            if (currentScreen==Menu.Main)
+            {
+                current.Draw(gameTime);
+            }
+            //else if
+
             spriteBatch.Begin();
             map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition);
             foreach (var sprite in _sprites)
