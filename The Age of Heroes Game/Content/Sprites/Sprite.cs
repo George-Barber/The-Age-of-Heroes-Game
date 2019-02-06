@@ -88,14 +88,23 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
 
         protected virtual void SetAnimations()
         {
-            if (Velocity.Y > +0)
+            if (Velocity.Y < 0)
                 _animationManager.Play(_animations["Player Forward"]);
-            if (Velocity.Y > -0)
+            if (Velocity.Y > 0)
                 _animationManager.Play(_animations["Player Backwards"]);
-            if (Velocity.X > -0)
-                _animationManager.Play(_animations["Player Left"]);
-            if (Velocity.X > +0)
+            if (Velocity.X > 0)
                 _animationManager.Play(_animations["Player Right"]);
+            if (Velocity.X < 0)
+                _animationManager.Play(_animations["Player Left"]);
+            if (Velocity.Y == 0)
+            {
+
+            }
+            if (Velocity.X == 0)
+            {
+
+            }
+
         }
 
 

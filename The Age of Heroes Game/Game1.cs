@@ -190,79 +190,115 @@ namespace The_Age_of_Heroes_Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState keys = Keyboard.GetState();
-            bool change = true;
-
-            if (!keytimer.Enabled)
+            if (currentScreen == Menu.Play)
             {
-                if (keys.IsKeyDown(Keys.Up))
+
+
+
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    Exit();
+
+                GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+                KeyboardState keyState = Keyboard.GetState();
+                //ProcessMovement(keyState, gamePadState);
+                //store current position to move back too if collision
+                int tempx = map.ObjectGroups["Objects"].Objects["Player"].X;
+                int tempy = map.ObjectGroups["Objects"].Objects["Player"].Y;
+                Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
+                ProcessMovement(keyState, gamePadState);
+
+                //now we have moved checkbounds
+                if (CheckBounds())
                 {
-                    current.Move(Direction.Up);
+                    map.ObjectGroups["Objects"].Objects["Player"].X = tempx;
+                    map.ObjectGroups["Objects"].Objects["Player"].Y = tempy;
+                }
+                var p = map.ObjectGroups["Objects"].Objects["Player"];
+                Rectangle playerRec = new Rectangle(p.X, p.Y, p.Width, p.Height);
+                CheckCoins(playerRec);
+                foreach (var sprite in _sprites)
+                    sprite.Update(gameTime, _sprites);
+                elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                // If the elapsed time is larger than the frame time
+                // we need to switch frames
+                if (elapsedTime > 100)
+                {
+                    // Move to the next frame
+                    currentFrame++;
+
+                    // If the currentFrame is equal to frameCount reset currentFrame to zero 
+                    if (currentFrame == frameCount)
+                    {
+                        currentFrame = 0;
+                    }
+
+                    // Reset the elapsed time to zero
+                    elapsedTime = 0;
                 }
 
-                else if (keys.IsKeyDown(Keys.Down))
-                {
-                    current.Move(Direction.Down);
-                }
-                else
-                    change = false;
+                // Grab the correct frame in the image strip by multiplying the currentFrame index by the Frame width
 
-                if (change)
+                sourceRect = new Rectangle(currentFrame * FrameWidth, 0, FrameWidth, FrameHeight);
+                _sprites[0].Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
+                // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
+                viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X - (graphics.PreferredBackBufferWidth / 2), map.ObjectGroups["Objects"].Objects["Player"].Y - (graphics.PreferredBackBufferHeight / 2));
+            }
+            else
+            {
+                KeyboardState keys = Keyboard.GetState();
+                bool change = true;
+
+                if (!keytimer.Enabled)
                 {
-                    keytimer = new Timer();
-                    keytimer.Interval = 200;
-                    keytimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                    keytimer.Enabled = true;
+                    if (keys.IsKeyDown(Keys.Up))
+                    {
+                        current.Move(Direction.Up);
+                    }
+
+                    else if (keys.IsKeyDown(Keys.Down))
+                    {
+                        current.Move(Direction.Down);
+                    }
+                    else if (keys.IsKeyDown(Keys.Enter))
+                    {
+                        string test = current.GetCurrentCaption();
+
+                        if (current == menu)
+                        {
+                            if (test == "Exit")
+                                Exit();
+                            else if (test == "Options")
+                            {
+                                current = options;
+                            }
+                            else if (test == "Play")
+                            {
+                                currentScreen = Menu.Play;
+                            }
+
+                        }
+
+                        else if (current == options)
+                        {
+                            if (test == "Back")
+                            {
+                                current = menu;
+                            }
+                        }
+                    }
+                    else
+                        change = false;
+
+                    if (change)
+                    {
+                        keytimer = new Timer();
+                        keytimer.Interval = 200;
+                        keytimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                        keytimer.Enabled = true;
+                    }
                 }
             }
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-            
-            GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-            KeyboardState keyState = Keyboard.GetState();
-            //ProcessMovement(keyState, gamePadState);
-            //store current position to move back too if collision
-            int tempx = map.ObjectGroups["Objects"].Objects["Player"].X;
-            int tempy = map.ObjectGroups["Objects"].Objects["Player"].Y;
-            Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
-            ProcessMovement(keyState, gamePadState);
-
-            //now we have moved checkbounds
-            if (CheckBounds())
-            {
-                map.ObjectGroups["Objects"].Objects["Player"].X = tempx;
-                map.ObjectGroups["Objects"].Objects["Player"].Y = tempy;
-            }
-            var p = map.ObjectGroups["Objects"].Objects["Player"];
-            Rectangle playerRec = new Rectangle(p.X, p.Y, p.Width, p.Height);
-            CheckCoins(playerRec);
-            foreach (var sprite in _sprites)
-                sprite.Update(gameTime, _sprites);
-            elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            // If the elapsed time is larger than the frame time
-            // we need to switch frames
-            if (elapsedTime > 100)
-            {
-                // Move to the next frame
-                currentFrame++;
-
-                // If the currentFrame is equal to frameCount reset currentFrame to zero 
-                if (currentFrame == frameCount) 
-                {
-                    currentFrame = 0;
-                }
-
-                // Reset the elapsed time to zero
-                elapsedTime = 0;
-            }
-
-            // Grab the correct frame in the image strip by multiplying the currentFrame index by the Frame width
-
-            sourceRect = new Rectangle(currentFrame * FrameWidth, 0, FrameWidth, FrameHeight);
-            _sprites[0].Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
-            // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
-            viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X - (graphics.PreferredBackBufferWidth / 2), map.ObjectGroups["Objects"].Objects["Player"].Y - (graphics.PreferredBackBufferHeight / 2));
             base.Update(gameTime);
         }
         private void OnTimedEvent(object source, ElapsedEventArgs e)
@@ -277,20 +313,24 @@ namespace The_Age_of_Heroes_Game
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            if (currentScreen==Menu.Main)
+            
+
+            if(currentScreen==Menu.Play)
+            {
+                spriteBatch.Begin();
+                map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition);
+                foreach (var sprite in _sprites)
+                {
+                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100));
+                }
+
+                spriteBatch.End();
+            }
+            else
             {
                 current.Draw(gameTime);
             }
-            //else if
-
-            spriteBatch.Begin();
-            map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition);
-            foreach (var sprite in _sprites)
-            {
-                sprite.Draw(spriteBatch, viewportPosition +new Vector2(0,100));
-            }
-
-            spriteBatch.End();
+            
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
