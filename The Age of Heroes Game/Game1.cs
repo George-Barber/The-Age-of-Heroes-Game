@@ -219,10 +219,9 @@ namespace The_Age_of_Heroes_Game
                 foreach (var sprite in _sprites)
                     sprite.Update(gameTime, _sprites);
                 elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-                // If the elapsed time is larger than the frame time
-                // we need to switch frames
-                if (elapsedTime > 100)
+                    // If the elapsed time is larger than the frame time
+                    // we need to switch frames
+                    if (elapsedTime > 100)
                 {
                     // Move to the next frame
                     currentFrame++;
@@ -243,6 +242,11 @@ namespace The_Age_of_Heroes_Game
                 _sprites[0].Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
                 // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
                 viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X - (graphics.PreferredBackBufferWidth / 2), map.ObjectGroups["Objects"].Objects["Player"].Y - (graphics.PreferredBackBufferHeight / 2));
+                KeyboardState keys = Keyboard.GetState();
+                if (keys.IsKeyDown(Keys.Tab))
+                {
+                    currentScreen = Menu.Main;
+                }
             }
             else
             {
@@ -276,7 +280,7 @@ namespace The_Age_of_Heroes_Game
                             {
                                 currentScreen = Menu.Play;
                             }
-
+                            
                         }
 
                         else if (current == options)
