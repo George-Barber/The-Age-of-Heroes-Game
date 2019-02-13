@@ -93,13 +93,13 @@ namespace The_Age_of_Heroes_Game
             FrameWidth = 115;
             FrameHeight = 69;
             frameCount = 8;
-
+            graphics.IsFullScreen = true;
             // Set the time to zero
             elapsedTime = 0;
             currentFrame = 0;
             base.Initialize();
-            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
         }
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -143,7 +143,7 @@ namespace The_Age_of_Heroes_Game
             big = Content.Load<SpriteFont>("Big");
             small = Content.Load<SpriteFont>("Small");
             // Set menus and screens
-            menu = new SimpleTextUI(this, big, new[] { "Play", "Options", "Credits", "Exit" })
+            menu = new SimpleTextUI(this, big, new[] { "Continue", "Options", "Credits", "Exit" })
             {
                 TextColor = Color.Black,
                 SelectedElement = new TextElement(">", Color.White),
@@ -285,7 +285,7 @@ namespace The_Age_of_Heroes_Game
                             {
                                 current = options;
                             }
-                            else if (test == "Play")
+                            else if (test == "Continue")
                             {
                                 currentScreen = Menu.Play;
                             }
@@ -297,6 +297,13 @@ namespace The_Age_of_Heroes_Game
                             if (test == "Back")
                             {
                                 current = menu;
+                            }
+                        }
+                        else if (current == options)
+                        {
+                            if (test == "FullScreen")
+                            {
+                                graphics.IsFullScreen = true;
                             }
                         }
                     }
@@ -325,7 +332,7 @@ namespace The_Age_of_Heroes_Game
         /// 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Red);
             
 
             if(currentScreen==Menu.Play)

@@ -135,7 +135,7 @@ namespace A1r.SimpleTextUI
 
     public class SimpleTextUI : DrawableGameComponent
     {
-        public Color TextColor = Color.LightGreen;
+        public Color TextColor = Color.Black;
         public int Width = 100;
         public Alignment Align
         {
@@ -187,7 +187,7 @@ namespace A1r.SimpleTextUI
             batch = new SpriteBatch(Game.GraphicsDevice);
             padding = new Vector2(100);
             _font = font;
-            selectedElement = new TextElement("", Color.LimeGreen);
+            selectedElement = new TextElement("", Color.White);
         }
         public SimpleTextUI(Game game, SpriteFont font, string[] items) : this(game, font)
         {
