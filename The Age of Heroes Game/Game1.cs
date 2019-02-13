@@ -32,6 +32,7 @@ namespace The_Age_of_Heroes_Game
         List<Squared.Tiled.Object> Inventory;
         int coin_collected = 0;
         SimpleTextUI menu;
+        SimpleTextUI inventory;
         SimpleTextUI options;
         SimpleTextUI current;
         SpriteFont big;
@@ -62,6 +63,7 @@ namespace The_Age_of_Heroes_Game
         // Height of a given frame
         public int FrameHeight;
         private int scale;
+
 
         public enum Menu
         {
@@ -143,8 +145,8 @@ namespace The_Age_of_Heroes_Game
             // Set menus and screens
             menu = new SimpleTextUI(this, big, new[] { "Play", "Options", "Credits", "Exit" })
             {
-                TextColor = Color.Purple,
-                SelectedElement = new TextElement(">", Color.Green),
+                TextColor = Color.Black,
+                SelectedElement = new TextElement(">", Color.White),
                 Align = Alignment.Left
             };
 
@@ -156,6 +158,12 @@ namespace The_Age_of_Heroes_Game
             });
             current = menu;
             keytimer = new Timer();
+            inventory = new SimpleTextUI(this, big, new[] { "Coins", "Items", "Keys", "Exit" })
+            {
+                TextColor = Color.Black,
+                SelectedElement = new TextElement(">", Color.White),
+                Align = Alignment.Left
+            };
 
 
             coinTexture = Content.Load<Texture2D>("coinTexture");
@@ -243,12 +251,13 @@ namespace The_Age_of_Heroes_Game
                 // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
                 viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X - (graphics.PreferredBackBufferWidth / 2), map.ObjectGroups["Objects"].Objects["Player"].Y - (graphics.PreferredBackBufferHeight / 2));
                 KeyboardState keys = Keyboard.GetState();
+                // Takes to main menu
                 if (keys.IsKeyDown(Keys.Tab))
                 {
                     currentScreen = Menu.Main;
                 }
             }
-            else
+            else if (currentScreen == Menu.Main)
             {
                 KeyboardState keys = Keyboard.GetState();
                 bool change = true;
