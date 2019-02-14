@@ -256,6 +256,10 @@ namespace The_Age_of_Heroes_Game
                 {
                     currentScreen = Menu.Main;
                 }
+                else if (keys.IsKeyDown(Keys.I))
+                {
+                    currentScreen = Menu.Inventory;
+                }
             }
             else if (currentScreen == Menu.Main)
             {
