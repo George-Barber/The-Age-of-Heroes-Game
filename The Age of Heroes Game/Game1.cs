@@ -75,6 +75,7 @@ namespace The_Age_of_Heroes_Game
         }
         Menu currentScreen = Menu.Main;
         public object Position { get; private set; }
+        public object mouse_position { get; private set; }
 
         public Game1()
         {
@@ -139,6 +140,22 @@ namespace The_Age_of_Heroes_Game
                     }
                 },
             };
+
+            MouseState state = Mouse.GetState();
+
+            // Update our sprites position to the current cursor location
+            mouse_position.X = state.X;
+            mouse_position.Y = state.Y;
+
+            // Check if Right Mouse Button pressed, if so, exit
+            if (state.RightButton == ButtonState.Pressed)
+                Exit();
+
+            if (state.LeftButton == ButtonState.Pressed)
+            {
+                mouse_position.X = state.X;
+                mouse_position.Y = state.Y;
+            }
 
             big = Content.Load<SpriteFont>("Big");
             small = Content.Load<SpriteFont>("Small");
