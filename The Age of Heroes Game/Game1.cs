@@ -128,7 +128,7 @@ namespace The_Age_of_Heroes_Game
                     { "Player Backwards", new Animation(Content.Load<Texture2D>("Player/Player Backwards"), 3) },
                     { "Player Left", new Animation(Content.Load<Texture2D>("Player/Player Left"), 3) },
                     { "Player Right", new Animation(Content.Load<Texture2D>("Player/Player Right"), 3) },
-                })
+                },true)
                 {
                     Position = new Vector2(100, 100),
                     Input = new Input()
@@ -140,22 +140,6 @@ namespace The_Age_of_Heroes_Game
                     }
                 },
             };
-
-            MouseState state = Mouse.GetState();
-
-            // Update our sprites position to the current cursor location
-            mouse_position.X = state.X;
-            mouse_position.Y = state.Y;
-
-            // Check if Right Mouse Button pressed, if so, exit
-            if (state.RightButton == ButtonState.Pressed)
-                Exit();
-
-            if (state.LeftButton == ButtonState.Pressed)
-            {
-                mouse_position.X = state.X;
-                mouse_position.Y = state.Y;
-            }
 
             big = Content.Load<SpriteFont>("Big");
             small = Content.Load<SpriteFont>("Small");
@@ -242,7 +226,7 @@ namespace The_Age_of_Heroes_Game
                 Rectangle playerRec = new Rectangle(p.X, p.Y, p.Width, p.Height);
                 CheckCoins(playerRec);
                 foreach (var sprite in _sprites)
-                    sprite.Update(gameTime, _sprites);
+                    sprite.Update(gameTime, _sprites, viewportPosition + new Vector2(0, 100));
                 elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                     // If the elapsed time is larger than the frame time
                     // we need to switch frames

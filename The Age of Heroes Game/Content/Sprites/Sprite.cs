@@ -17,7 +17,10 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
         protected AnimationManager _animationManager;
         protected Dictionary<string, Animation> _animations;
         protected Vector2 _position;
-        protected Texture2D _texture;
+        protected Texture2D _texture, healthtexture;
+        public Rectangle HealthBar;
+        public int Health;
+        public int HealthMax;
         #endregion
         #region Properties
         public Input Input;
@@ -41,12 +44,31 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
         {
             if (_texture != null)
             {
-                spriteBatch.Draw(_texture, Position-vp, Color.White);
+                spriteBatch.Draw(_texture, Position - vp, Color.White);
+
+
+                
                 Console.WriteLine(Position + " " + vp);
             }
             else if (_animationManager != null)
             {
                 _animationManager.Draw(spriteBatch, vp);
+                if (HealthBar != null)
+                {
+
+                    healthtexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+
+                    // Create a 1D array of color data to fill the pixel texture with.  
+                    Color[] colorData = {
+                        Color.White,
+                    };
+
+                    // Set the texture data with our color information.  
+                    healthtexture.SetData<Color>(colorData);
+
+                    spriteBatch.Draw(healthtexture, HealthBar, Color.Red);
+
+                }
             }
             else throw new Exception("DRAW ERROR!!!");
 
@@ -64,11 +86,20 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
                 Velocity.X = Speed;
         }
 
-        public Sprite(Dictionary<string, Animation> animations)
+        public Sprite(Dictionary<string, Animation> animations, bool health)
         {
+            if (health)
+            {
+                Health = 10;
+                HealthMax = 10;
+                HealthBar = new Rectangle(0, 0, 27/HealthMax*Health, 5);
+
+                // Make a 1x1 texture named pixel.  
+
+            }
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
-
+             
         }
 
         public Sprite(Texture2D texture)
@@ -76,13 +107,15 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             _texture = texture;
         }
 
-        public virtual void Update(GameTime gameTime, List<Sprite> sprites)
+        public virtual void Update(GameTime gameTime, List<Sprite> sprites, Vector2 vp)
         {
             Move();
 
             SetAnimations();
             Position += Velocity;
             Velocity = Vector2.Zero;
+            HealthBar.X = (int)Position.X - (int)vp.X;
+            HealthBar.Y = (int)Position.Y - (int)vp.Y+80;
             _animationManager.Update(gameTime);
         }
 
