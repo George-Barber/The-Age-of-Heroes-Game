@@ -213,8 +213,8 @@ namespace The_Age_of_Heroes_Game
                 {
                     Vector2 tempos = pposition - EnemyPos;
                     tempos = tempos / Vector2.Distance(EnemyPos,pposition);
-                    map.ObjectGroups["Objects"].Objects["Enemy" + i].X = ;
-                    map.ObjectGroups["Objects"].Objects["Enemy" + i].Y = ;
+                    map.ObjectGroups["Objects"].Objects["Enemy" + i].X += (int)tempos.X;
+                    map.ObjectGroups["Objects"].Objects["Enemy" + i].Y += (int)tempos.Y;
                 }
             }
         }
