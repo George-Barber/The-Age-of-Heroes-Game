@@ -75,7 +75,7 @@ namespace The_Age_of_Heroes_Game
             Inventory
         }
         Menu currentScreen = Menu.Main;
-        public object Position { get; private set; }
+        public Vector2 Position { get; private set; }
         public object mouse_position { get; private set; }
 
         public Game1()
@@ -167,7 +167,7 @@ namespace The_Age_of_Heroes_Game
                 Align = Alignment.Left
             };
 
-            EnemyTexture = Content.Load<Texture2D>("EnemyTexture");
+            EnemyTexture = Content.Load<Texture2D>("coinTexture");
             coinTexture = Content.Load<Texture2D>("coinTexture");
             blankTexture = Content.Load<Texture2D>("Transparent");
 
@@ -237,7 +237,7 @@ namespace The_Age_of_Heroes_Game
                 int tempy = map.ObjectGroups["Objects"].Objects["Player"].Y;
                 Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
                 ProcessMovement(keyState, gamePadState);
-
+                MoveEnemies(Position);
                 //now we have moved checkbounds
                 if (CheckBounds())
                 {
