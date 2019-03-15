@@ -28,6 +28,7 @@ namespace The_Age_of_Heroes_Game
         private List<Sprite> _sprites;
         private Texture2D blankTexture;
         private Texture2D coinTexture;
+        private Texture2D EnemyTexture;
         private readonly Texture2D keyTexture;
         List<Squared.Tiled.Object> Inventory;
         int coin_collected = 0;
@@ -166,15 +167,20 @@ namespace The_Age_of_Heroes_Game
                 Align = Alignment.Left
             };
 
-
+            EnemyTexture = Content.Load<Texture2D>("EnemyTexture");
             coinTexture = Content.Load<Texture2D>("coinTexture");
             blankTexture = Content.Load<Texture2D>("Transparent");
+
             int coinCount = Convert.ToInt32(map.ObjectGroups["Objects"].Properties["Coin_Count"]);
             for (int i = 1; i <= coinCount; i++)
             {
                 map.ObjectGroups["Objects"].Objects["Coin" + i].Texture = coinTexture;
             }
-
+            int EnemyCount = Convert.ToInt32(map.ObjectGroups["Objects"].Properties["Enemy_Count"]);
+            for (int i = 1; i <= EnemyCount; i++)
+            {
+                map.ObjectGroups["Objects"].Objects["Enemy" + i].Texture = EnemyTexture;
+            }
 
             Inventory = new List<Squared.Tiled.Object>();
             // TODO: use this.Content to load your game content here
@@ -197,6 +203,22 @@ namespace The_Age_of_Heroes_Game
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        private void MoveEnemies(Vector2 pposition)
+        {
+            int EnemyCount = Convert.ToInt32(map.ObjectGroups["Objects"].Properties["Enemy_Count"]);
+            for (int i = 1; i <= EnemyCount; i++)
+            {
+                Vector2 EnemyPos = new Vector2(map.ObjectGroups["Objects"].Objects["Enemy" + i].X,map.ObjectGroups["Objects"].Objects["Enemy" + i].Y);
+                if(Vector2.Distance (EnemyPos,pposition)<100)
+                {
+                    Vector2 tempos = pposition - EnemyPos;
+                    tempos = tempos / Vector2.Distance(EnemyPos,pposition);
+                    map.ObjectGroups["Objects"].Objects["Enemy" + i].X = ;
+                    map.ObjectGroups["Objects"].Objects["Enemy" + i].Y = ;
+                }
+            }
+        }
+
         protected override void Update(GameTime gameTime)
         {
             if (currentScreen == Menu.Play)
