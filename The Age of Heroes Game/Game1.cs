@@ -31,6 +31,7 @@ namespace The_Age_of_Heroes_Game
         private Texture2D EnemyTexture;
         private readonly Texture2D keyTexture;
         List<Squared.Tiled.Object> Inventory;
+        List<Enemy> EnemyList;
         int coin_collected = 0;
         SimpleTextUI menu;
         SimpleTextUI inventory;
@@ -95,7 +96,7 @@ namespace The_Age_of_Heroes_Game
             FrameWidth = 115;
             FrameHeight = 69;
             frameCount = 8;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             // Set the time to zero
             elapsedTime = 0;
             currentFrame = 0;
@@ -177,9 +178,12 @@ namespace The_Age_of_Heroes_Game
                 map.ObjectGroups["Objects"].Objects["Coin" + i].Texture = coinTexture;
             }
             int EnemyCount = Convert.ToInt32(map.ObjectGroups["Objects"].Properties["Enemy_Count"]);
+            EnemyList = new List<Enemy>();
             for (int i = 1; i <= EnemyCount; i++)
             {
-                map.ObjectGroups["Objects"].Objects["Enemy" + i].Texture = EnemyTexture;
+                Enemy temp = new Enemy(animations, true);
+                temp.Position = new Vector2(map.ObjectGroups["Objects"].Objects["Enemy" + i].X, map.ObjectGroups["Objects"].Objects["Enemy" + i].Y);
+                EnemyList.Add(temp);
             }
 
             Inventory = new List<Squared.Tiled.Object>();
@@ -203,21 +207,7 @@ namespace The_Age_of_Heroes_Game
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        private void MoveEnemies(Vector2 pposition)
-        {
-            int EnemyCount = Convert.ToInt32(map.ObjectGroups["Objects"].Properties["Enemy_Count"]);
-            for (int i = 1; i <= EnemyCount; i++)
-            {
-                Vector2 EnemyPos = new Vector2(map.ObjectGroups["Objects"].Objects["Enemy" + i].X,map.ObjectGroups["Objects"].Objects["Enemy" + i].Y);
-                if(Vector2.Distance (EnemyPos,pposition)<100)
-                {
-                    Vector2 tempos = pposition - EnemyPos;
-                    tempos = tempos / Vector2.Distance(EnemyPos,pposition);
-                    map.ObjectGroups["Objects"].Objects["Enemy" + i].X += (int)tempos.X;
-                    map.ObjectGroups["Objects"].Objects["Enemy" + i].Y += (int)tempos.Y;
-                }
-            }
-        }
+        
 
         protected override void Update(GameTime gameTime)
         {
@@ -237,7 +227,11 @@ namespace The_Age_of_Heroes_Game
                 int tempy = map.ObjectGroups["Objects"].Objects["Player"].Y;
                 Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
                 ProcessMovement(keyState, gamePadState);
-                MoveEnemies(Position);
+                foreach(Enemy E in EnemyList)
+                {
+                    E.Update(gameTime, Position);
+                }
+                //MoveEnemies(Position);
                 //now we have moved checkbounds
                 if (CheckBounds())
                 {
@@ -330,7 +324,7 @@ namespace The_Age_of_Heroes_Game
                         {
                             if (test == "FullScreen")
                             {
-                                graphics.IsFullScreen = true;
+                                graphics.IsFullScreen = false;
                             }
                         }
                     }
@@ -352,6 +346,8 @@ namespace The_Age_of_Heroes_Game
         {
             keytimer.Enabled = false;
         }
+
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -367,6 +363,10 @@ namespace The_Age_of_Heroes_Game
                 spriteBatch.Begin();
                 map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition);
                 foreach (var sprite in _sprites)
+                {
+                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100));
+                }
+                foreach (Enemy sprite in EnemyList)
                 {
                     sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100));
                 }

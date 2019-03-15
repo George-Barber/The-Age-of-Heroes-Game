@@ -44,6 +44,7 @@
     <Compile Include="Content\Managers\AnimationManager.cs" />
     <Compile Include="Content\Models\Animation.cs" />
     <Compile Include="Content\Models\Input.cs" />
+    <Compile Include="Content\Sprites\Enemy.cs" />
     <Compile Include="Content\Sprites\Sprite.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="NPCAI.cs" />
