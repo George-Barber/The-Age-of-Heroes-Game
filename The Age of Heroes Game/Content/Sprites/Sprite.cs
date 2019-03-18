@@ -107,16 +107,19 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             _texture = texture;
         }
 
-        public virtual void Update(GameTime gameTime, List<Sprite> sprites, Vector2 vp)
+        public virtual void Update(GameTime gameTime,Vector2 vp)
         {
             Move();
 
             SetAnimations();
+
             Position += Velocity;
-            Velocity = Vector2.Zero;
+
             HealthBar.X = (int)Position.X - (int)vp.X;
-            HealthBar.Y = (int)Position.Y - (int)vp.Y+80;
-            _animationManager.Update(gameTime);
+            HealthBar.Y = (int)Position.Y - (int)vp.Y + 80;
+            if (Velocity != Vector2.Zero)
+                _animationManager.Update(gameTime);
+            Velocity = Vector2.Zero;
         }
 
         protected virtual void SetAnimations()

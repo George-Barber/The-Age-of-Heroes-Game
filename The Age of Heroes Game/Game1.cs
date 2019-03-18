@@ -20,7 +20,7 @@ namespace The_Age_of_Heroes_Game
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Map map;
+        Map map,map1,map2,map3,map4;
         Layer collision;
         private Vector2 viewportPosition;
         int tilepixel;
@@ -31,7 +31,7 @@ namespace The_Age_of_Heroes_Game
         private Texture2D EnemyTexture;
         private readonly Texture2D keyTexture;
         List<Squared.Tiled.Object> Inventory;
-        List<Enemy> EnemyList;
+        public List<Enemy> EnemyList;
         int coin_collected = 0;
         SimpleTextUI menu;
         SimpleTextUI inventory;
@@ -112,7 +112,11 @@ namespace The_Age_of_Heroes_Game
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            map = Map.Load(Path.Combine(Content.RootDirectory, "SimpleRPG.tmx"), Content);
+            map1 = Map.Load(Path.Combine(Content.RootDirectory, "SimpleRPG.tmx"), Content);
+            map2 = Map.Load(Path.Combine(Content.RootDirectory, "SimpleRPG.tmx"), Content);
+            map3 = Map.Load(Path.Combine(Content.RootDirectory, "SimpleRPG.tmx"), Content);
+            map4 = Map.Load(Path.Combine(Content.RootDirectory, "SimpleRPG.tmx"), Content);
+            map = map1;
             collision = map.Layers["Collision"];
             tilepixel = map.TileWidth;
             var animations = new Dictionary<string, Animation>()
@@ -186,6 +190,7 @@ namespace The_Age_of_Heroes_Game
                 EnemyList.Add(temp);
             }
 
+            map = map1;
             Inventory = new List<Squared.Tiled.Object>();
             // TODO: use this.Content to load your game content here
         }
@@ -233,7 +238,7 @@ namespace The_Age_of_Heroes_Game
                 }
                 //MoveEnemies(Position);
                 //now we have moved checkbounds
-                if (CheckBounds())
+                if (CheckBounds(map.ObjectGroups["Objects"].Objects["Player"]))
                 {
                     map.ObjectGroups["Objects"].Objects["Player"].X = tempx;
                     map.ObjectGroups["Objects"].Objects["Player"].Y = tempy;
@@ -242,7 +247,24 @@ namespace The_Age_of_Heroes_Game
                 Rectangle playerRec = new Rectangle(p.X, p.Y, p.Width, p.Height);
                 CheckCoins(playerRec);
                 foreach (var sprite in _sprites)
-                    sprite.Update(gameTime, _sprites, viewportPosition + new Vector2(0, 100));
+                    sprite.Update(gameTime, viewportPosition + new Vector2(0, 100));
+
+                int i = 1;
+                foreach (Enemy E in EnemyList)
+                {
+                    Vector2 temp = E.Position;
+                    E.Update(gameTime, viewportPosition + new Vector2(0, 100));
+                    if (CheckBounds(map.ObjectGroups["Objects"].Objects["Enemy" + i])|| CheckEnemy(map.ObjectGroups["Objects"].Objects["Enemy" + i],E))
+                    {
+                        E.Position = temp;
+                    }
+                    else
+                    {
+                        map.ObjectGroups["Objects"].Objects["Enemy" + i].X = (int)E.Position.X;
+                        map.ObjectGroups["Objects"].Objects["Enemy" + i].Y = (int)E.Position.Y;
+                    }
+                    i++;
+                }
                 elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                     // If the elapsed time is larger than the frame time
                     // we need to switch frames
@@ -408,15 +430,15 @@ namespace The_Age_of_Heroes_Game
             
         }
         
-        public bool CheckBounds()
+        public bool CheckBounds(Squared.Tiled.Object obj)
         {
             bool check = false;
 
             Rectangle playrec = new Rectangle(
-                map.ObjectGroups["Objects"].Objects["Player"].X,
-                map.ObjectGroups["Objects"].Objects["Player"].Y,
-                map.ObjectGroups["Objects"].Objects["Player"].Width,
-                map.ObjectGroups["Objects"].Objects["Player"].Height
+                obj.X,
+                obj.Y,
+                obj.Width,
+                obj.Height
                 );
 
             for (int x = 0; x < map.Width; x++)
@@ -440,7 +462,39 @@ namespace The_Age_of_Heroes_Game
 
             return check;
         }
-        
+        public bool CheckEnemy(Squared.Tiled.Object obj, Enemy e)
+        {
+            bool check = false;
+
+            Rectangle playrec = new Rectangle(
+                obj.X,
+                obj.Y,
+                obj.Width,
+                obj.Height
+                );
+
+            foreach(Enemy E in EnemyList)
+            {
+                if (E != e)
+                {
+                    Rectangle enemyrec = new Rectangle(
+    (int)E.Position.X,
+    (int)E.Position.Y,
+    (int)32,
+    (int)32
+    );
+
+
+                    if (playrec.Intersects(enemyrec))
+                    {
+                        check = true;
+                    }
+                }
+            }
+
+            return check;
+        }
+
         public void CheckCoins(Rectangle player)
         {
             int coinCount = Convert.ToInt32(map.ObjectGroups["Objects"].Properties["Coin_Count"]);
