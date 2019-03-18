@@ -20,7 +20,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
         }
 
         public virtual void Update(GameTime gameTime, Vector2 pposition)
-        {
+        { 
             if (Vector2.Distance(_position, pposition) < 20)
             {
 
