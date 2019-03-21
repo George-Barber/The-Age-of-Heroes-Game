@@ -126,6 +126,15 @@ namespace The_Age_of_Heroes_Game
                 { "Player Left", new Animation(Content.Load<Texture2D>("Player/Player Left"), 3) },
                 { "Player Right", new Animation(Content.Load<Texture2D>("Player/Player Right"), 3) },
             };
+
+            var animations2 = new Dictionary<string, Animation>()
+            {
+                { "Enemy Forward", new Animation(Content.Load<Texture2D>("Enemy/Enemy Forward"), 3) },
+                { "Enemy Backwards", new Animation(Content.Load<Texture2D>("Enemy/Enemy Backwards"), 3) },
+                { "Enemy Left", new Animation(Content.Load<Texture2D>("Enemy/Enemy Left"), 3) },
+                { "Enemy Right", new Animation(Content.Load<Texture2D>("Enemy/Enemy Right"), 3) },
+            };
+
             _sprites = new List<Sprite>()
             {
                 new Sprite(new Dictionary<string, Animation>()
@@ -135,6 +144,7 @@ namespace The_Age_of_Heroes_Game
                     { "Player Left", new Animation(Content.Load<Texture2D>("Player/Player Left"), 3) },
                     { "Player Right", new Animation(Content.Load<Texture2D>("Player/Player Right"), 3) },
                 },true)
+
                 {
                     Position = new Vector2(100, 100),
                     Input = new Input()
@@ -145,6 +155,7 @@ namespace The_Age_of_Heroes_Game
                         Right = Keys.Right,
                     }
                 },
+
             };
 
             big = Content.Load<SpriteFont>("Big");
@@ -185,7 +196,7 @@ namespace The_Age_of_Heroes_Game
             EnemyList = new List<Enemy>();
             for (int i = 1; i <= EnemyCount; i++)
             {
-                Enemy temp = new Enemy(animations, true);
+                Enemy temp = new Enemy(animations2, true);
                 temp.Position = new Vector2(map.ObjectGroups["Objects"].Objects["Enemy" + i].X, map.ObjectGroups["Objects"].Objects["Enemy" + i].Y);
                 EnemyList.Add(temp);
             }

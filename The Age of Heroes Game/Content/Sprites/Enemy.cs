@@ -14,27 +14,29 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
 {
     public class Enemy : Sprite
     {
-        public Enemy(Dictionary<string, Animation> animations, bool health) : base(animations, health)
+        public Enemy(Dictionary<string, Animation> animations2, bool health) : base(animations2, health)
         {
 
         }
         protected virtual void SetAnimations()
         {
             if (Velocity.Y < 0 && Velocity.X!=0)
-                _animationManager.Play(_animations["Player Forward"]);
+                _animationManager.Play(_animations["Enemy Forward"]);
             else if (Velocity.Y > 0 && Velocity.X != 0)
-                _animationManager.Play(_animations["Player Backwards"]);
+                _animationManager.Play(_animations["Enemy Backwards"]);
             else if (Velocity.Y < 0)
-                _animationManager.Play(_animations["Player Forward"]);
+                _animationManager.Play(_animations["Enemy Forward"]);
             else if (Velocity.Y > 0)
-                _animationManager.Play(_animations["Player Backwards"]);
+                _animationManager.Play(_animations["Enemy Backwards"]);
             else if (Velocity.X > 0)
-                _animationManager.Play(_animations["Player Right"]);
+                _animationManager.Play(_animations["Enemy Right"]);
             else if (Velocity.X < 0)
-                _animationManager.Play(_animations["Player Left"]);
+                _animationManager.Play(_animations["Enemy Left"]);
 
 
         }
+
+
         public virtual void Update(GameTime gameTime, Vector2 pposition)
         { 
             if (Vector2.Distance(_position, pposition) < 20)

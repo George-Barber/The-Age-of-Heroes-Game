@@ -132,14 +132,6 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
                 _animationManager.Play(_animations["Player Right"]);
             if (Velocity.X < 0)
                 _animationManager.Play(_animations["Player Left"]);
-            if (Velocity.Y == 0)
-            {
-
-            }
-            if (Velocity.X == 0)
-            {
-
-            }
 
         }
 

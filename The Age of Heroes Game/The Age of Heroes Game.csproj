@@ -47,7 +47,6 @@
     <Compile Include="Content\Sprites\Enemy.cs" />
     <Compile Include="Content\Sprites\Sprite.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="NPCAI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleTextUI.cs" />
