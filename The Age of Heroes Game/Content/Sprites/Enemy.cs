@@ -14,6 +14,8 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
 {
     public class Enemy : Sprite
     {
+
+
         public Enemy(Dictionary<string, Animation> animations2, bool health) : base(animations2, health)
         {
 
@@ -36,8 +38,40 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
 
         }
 
+        public virtual void Draw(SpriteBatch spriteBatch, Vector2 vp, bool check)
+        {
+            if (_texture != null)
+            {
+                spriteBatch.Draw(_texture, Position - vp + new Vector2(400,200), Color.White);
 
-        public virtual void Update(GameTime gameTime, Vector2 pposition)
+
+
+                Console.WriteLine(Position + " " + vp);
+            }
+            else if (_animationManager != null)
+            {
+                _animationManager.Draw(spriteBatch, vp + new Vector2(400, 200));
+                if (HealthBar != null)
+                {
+
+                    healthtexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+
+                    // Create a 1D array of color data to fill the pixel texture with.  
+                    Color[] colorData = {
+                        Color.White,
+                    };
+
+                    // Set the texture data with our color information.  
+                    healthtexture.SetData<Color>(colorData);
+
+                    spriteBatch.Draw(healthtexture, HealthBar, Color.Red);
+
+                }
+            }
+            else throw new Exception("DRAW ERROR!!!");
+
+        }
+        public virtual void Update(GameTime gameTime, Vector2 pposition, Vector2 vp)
         { 
             if (Vector2.Distance(_position, pposition) < 20)
             {

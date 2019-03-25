@@ -243,10 +243,10 @@ namespace The_Age_of_Heroes_Game
                 int tempy = map.ObjectGroups["Objects"].Objects["Player"].Y;
                 Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
                 ProcessMovement(keyState, gamePadState);
-                foreach(Enemy E in EnemyList)
-                {
-                    E.Update(gameTime, Position);
-                }
+                //foreach(Enemy E in EnemyList)
+                //{
+                    //E.Update(gameTime, Position);
+                //}
                 //MoveEnemies(Position);
                 //now we have moved checkbounds
                 if (CheckBounds(map.ObjectGroups["Objects"].Objects["Player"]))
@@ -264,13 +264,15 @@ namespace The_Age_of_Heroes_Game
                 foreach (Enemy E in EnemyList)
                 {
                     Vector2 temp = E.Position;
-                    E.Update(gameTime, viewportPosition + new Vector2(0, 100));
+                    E.Update(gameTime, Position + new Vector2(0, 100));
                     if (CheckBounds(map.ObjectGroups["Objects"].Objects["Enemy" + i])|| CheckEnemy(map.ObjectGroups["Objects"].Objects["Enemy" + i],E))
                     {
                         E.Position = temp;
+                        Console.WriteLine("Enemy collision");
                     }
                     else
                     {
+
                         map.ObjectGroups["Objects"].Objects["Enemy" + i].X = (int)E.Position.X;
                         map.ObjectGroups["Objects"].Objects["Enemy" + i].Y = (int)E.Position.Y;
                     }
@@ -401,7 +403,7 @@ namespace The_Age_of_Heroes_Game
                 }
                 foreach (Enemy sprite in EnemyList)
                 {
-                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100));
+                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100), true);
                 }
 
                 spriteBatch.End();

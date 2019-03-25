@@ -25,6 +25,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
         #region Properties
         public Input Input;
         public Vector2 Position
+
         {
             get { return _position; }
             set
@@ -73,7 +74,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             else throw new Exception("DRAW ERROR!!!");
 
         }
-
+        
         public virtual void Move()
         {
             if (Keyboard.GetState().IsKeyDown(Input.Up))
@@ -90,8 +91,8 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
         {
             if (health)
             {
-                Health = 10;
-                HealthMax = 10;
+                Health = 5;
+                HealthMax = 5;
                 HealthBar = new Rectangle(0, 0, 27/HealthMax*Health, 5);
 
                 // Make a 1x1 texture named pixel.  
