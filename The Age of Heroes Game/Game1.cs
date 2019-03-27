@@ -257,14 +257,15 @@ namespace The_Age_of_Heroes_Game
                 var p = map.ObjectGroups["Objects"].Objects["Player"];
                 Rectangle playerRec = new Rectangle(p.X, p.Y, p.Width, p.Height);
                 CheckCoins(playerRec);
+                Vector2 Test = (viewportPosition + new Vector2(0, 100) - new Vector2((graphics.PreferredBackBufferWidth / 2), (graphics.PreferredBackBufferHeight / 2)));
                 foreach (var sprite in _sprites)
-                    sprite.Update(gameTime, viewportPosition + new Vector2(0, 100));
+                    sprite.Update(gameTime,Position, Test);
 
                 int i = 1;
                 foreach (Enemy E in EnemyList)
                 {
                     Vector2 temp = E.Position;
-                    E.Update(gameTime, Position + new Vector2(0, 100));
+                    E.Update(gameTime, Position, viewportPosition, true);
                     if (CheckBounds(map.ObjectGroups["Objects"].Objects["Enemy" + i])|| CheckEnemy(map.ObjectGroups["Objects"].Objects["Enemy" + i],E))
                     {
                         E.Position = temp;
@@ -301,7 +302,8 @@ namespace The_Age_of_Heroes_Game
                 sourceRect = new Rectangle(currentFrame * FrameWidth, 0, FrameWidth, FrameHeight);
                 _sprites[0].Position = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
                 // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
-                viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X - (graphics.PreferredBackBufferWidth / 2), map.ObjectGroups["Objects"].Objects["Player"].Y - (graphics.PreferredBackBufferHeight / 2));
+                //viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X - (graphics.PreferredBackBufferWidth / 2), map.ObjectGroups["Objects"].Objects["Player"].Y - (graphics.PreferredBackBufferHeight / 2));
+                viewportPosition = new Vector2(map.ObjectGroups["Objects"].Objects["Player"].X, map.ObjectGroups["Objects"].Objects["Player"].Y);
                 KeyboardState keys = Keyboard.GetState();
                 // Takes to main menu
                 if (keys.IsKeyDown(Keys.Tab))
@@ -399,11 +401,11 @@ namespace The_Age_of_Heroes_Game
                 map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition);
                 foreach (var sprite in _sprites)
                 {
-                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100));
+                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100) - new Vector2((graphics.PreferredBackBufferWidth / 2), (graphics.PreferredBackBufferHeight / 2)));
                 }
                 foreach (Enemy sprite in EnemyList)
                 {
-                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100), true);
+                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100) - new Vector2((graphics.PreferredBackBufferWidth / 2), (graphics.PreferredBackBufferHeight / 2)), true);
                 }
 
                 spriteBatch.End();

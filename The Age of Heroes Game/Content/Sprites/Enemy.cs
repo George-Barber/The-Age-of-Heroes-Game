@@ -20,7 +20,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
         {
 
         }
-        protected virtual void SetAnimations()
+        protected virtual void SetAnimations(bool check)
         {
             if (Velocity.Y < 0 && Velocity.X!=0)
                 _animationManager.Play(_animations["Enemy Forward"]);
@@ -50,7 +50,8 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             }
             else if (_animationManager != null)
             {
-                _animationManager.Draw(spriteBatch, vp + new Vector2(400, 200));
+                _animationManager.Draw(spriteBatch, Position - vp);
+                Console.WriteLine(Position + " " + vp + " " + (Position - vp));
                 if (HealthBar != null)
                 {
 
@@ -71,7 +72,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             else throw new Exception("DRAW ERROR!!!");
 
         }
-        public virtual void Update(GameTime gameTime, Vector2 pposition, Vector2 vp)
+        public virtual void Update(GameTime gameTime, Vector2 pposition, Vector2 vp, bool check)
         { 
             if (Vector2.Distance(_position, pposition) < 20)
             {
@@ -88,7 +89,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
                 Velocity = Vector2.Zero;
             }
 
-            SetAnimations();
+            SetAnimations(true);
 
             Position += Velocity;
             

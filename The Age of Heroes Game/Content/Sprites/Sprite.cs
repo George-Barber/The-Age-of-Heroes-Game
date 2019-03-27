@@ -80,6 +80,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             if (Keyboard.GetState().IsKeyDown(Input.Up))
                 Velocity.Y = -Speed;
             else if (Keyboard.GetState().IsKeyDown(Input.Down))
+
                 Velocity.Y = Speed;
             else if (Keyboard.GetState().IsKeyDown(Input.Left))
                 Velocity.X = -Speed;
@@ -108,7 +109,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             _texture = texture;
         }
 
-        public virtual void Update(GameTime gameTime,Vector2 vp)
+        public virtual void Update(GameTime gameTime, Vector2 Position,Vector2 vp)
         {
             Move();
 
