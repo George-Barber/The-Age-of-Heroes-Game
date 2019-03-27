@@ -50,7 +50,7 @@ namespace The_Age_of_Heroes_Game.Content.Sprites
             }
             else if (_animationManager != null)
             {
-                _animationManager.Draw(spriteBatch, Position - vp);
+                _animationManager.Draw(spriteBatch, Position);
                 Console.WriteLine(Position + " " + vp + " " + (Position - vp));
                 if (HealthBar != null)
                 {

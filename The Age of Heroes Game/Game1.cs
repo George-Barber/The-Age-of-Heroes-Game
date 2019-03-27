@@ -398,14 +398,15 @@ namespace The_Age_of_Heroes_Game
             if(currentScreen==Menu.Play)
             {
                 spriteBatch.Begin();
-                map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition);
+                map.Draw(spriteBatch, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), viewportPosition - new Vector2((graphics.PreferredBackBufferWidth / 2), (graphics.PreferredBackBufferHeight / 2)));
                 foreach (var sprite in _sprites)
                 {
                     sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100) - new Vector2((graphics.PreferredBackBufferWidth / 2), (graphics.PreferredBackBufferHeight / 2)));
                 }
                 foreach (Enemy sprite in EnemyList)
                 {
-                    sprite.Draw(spriteBatch, viewportPosition + new Vector2(0, 100) - new Vector2((graphics.PreferredBackBufferWidth / 2), (graphics.PreferredBackBufferHeight / 2)), true);
+                    sprite.Draw(spriteBatch, new Vector2(0, 100) - new Vector2((graphics.PreferredBackBufferWidth / 2), (graphics.PreferredBackBufferHeight / 2)), true);
+                    //sprite.Draw(spriteBatch, sprite.Position, true);
                 }
 
                 spriteBatch.End();
